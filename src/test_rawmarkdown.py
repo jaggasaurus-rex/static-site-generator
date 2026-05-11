@@ -2,7 +2,7 @@ import unittest
 
 from textnode import TextNode, TextType, text_node_to_html_node
 
-from rawmarkdown import split_nodes_delimiter
+from rawmarkdown import split_nodes_delimiter, extract_markdown_images, extract_markdown_links
 
 class TestInlineMarkdown(unittest.TestCase):
     def test_delim_bold(self):
@@ -84,6 +84,45 @@ class TestInlineMarkdown(unittest.TestCase):
             new_nodes,
         )
 
+    def test_double_text_link_extraction(self):
+        text = "This is text with a ![rick roll](https://i.imgur.com/aKaOqIh.gif) and ![obi wan](https://i.imgur.com/fJRm4Vk.jpeg)"
+        extract = extract_markdown_images(text)
+        self.assertListEqual(
+            [
+                ("rick roll", "https://i.imgur.com/aKaOqIh.gif"), 
+                ("obi wan", "https://i.imgur.com/fJRm4Vk.jpeg")
+            ],
+            extract
+        )
 
+    def test_double_image_link_extraction(self):
+        text = "This is text with a link [to boot dev](https://www.boot.dev) and [to youtube](https://www.youtube.com/@bootdotdev)"
+        extract = extract_markdown_links(text)
+        self.assertListEqual(
+            [
+                ("to boot dev", "https://www.boot.dev"), 
+                ("to youtube", "https://www.youtube.com/@bootdotdev")
+            ],
+            extract
+        )
+    
+    def test_extract_markdown_images(self):
+        matches = extract_markdown_images(
+            "This is text with an ![image](https://i.imgur.com/zjjcJKZ.png)"
+        )
+        self.assertListEqual([("image", "https://i.imgur.com/zjjcJKZ.png")], matches)
+
+    def test_extract_markdown_links(self):
+        matches = extract_markdown_links(
+            "This is text with a [link](https://boot.dev) and [another link](https://wikipedia.org)"
+        )
+        self.assertListEqual(
+            [
+                ("link", "https://boot.dev"),
+                ("another link", "https://wikipedia.org"),
+            ],
+            matches,
+        )
+        
 if __name__ == "__main__":
     unittest.main()
