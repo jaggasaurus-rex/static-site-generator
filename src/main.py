@@ -1,12 +1,7 @@
 from textnode import TextNode, TextType
-
-print("hello world")
-
-
+from copystatic import source_to_destination
 
 def main():
-    test_object = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
-    print(f"TextNode({test_object})")
-
-
+    source_to_destination()
+    
 main()
