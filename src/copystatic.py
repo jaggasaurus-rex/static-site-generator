@@ -36,19 +36,55 @@ def extract_title(markdown):
     if title == "":
         raise Exception("No title line")
     return title
-
+'''
 def generate_page(from_path, template_path, dest_path):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+    
     with open(from_path) as f:
         article = f.read()
     title = extract_title(article)
     with open(template_path) as f:
         template = f.read()
+    
     converted = markdown_to_html_node(article)
     content = converted.to_html()
+    
     updated_title = template.replace("{{ Title }}", title)
     updated_content = updated_title.replace("{{ Content }}", content)
+    
     file_dir = os.path.dirname(dest_path)
     os.makedirs(file_dir, exist_ok=True)
     with open(dest_path, "w") as f:
         f.write(updated_content)
+'''
+
+def generate_page(from_path, template_path, dest_path):
+    if os.path.isfile(from_path):
+        print(f"Generating page from {from_path} to {dest_path} using {template_path}")
+        
+        with open(from_path) as f:
+            article = f.read()
+        title = extract_title(article)
+        with open(template_path) as f:
+            template = f.read()
+        
+        converted = markdown_to_html_node(article)
+        content = converted.to_html()
+        
+        updated_title = template.replace("{{ Title }}", title)
+        updated_content = updated_title.replace("{{ Content }}", content)
+        
+        file_dir = os.path.dirname(dest_path)
+        os.makedirs(file_dir, exist_ok=True)
+        name, ext = os.path.splitext(dest_path)
+        name += ".html"
+        with open(name, "w") as f:
+            f.write(updated_content)
+    elif os.path.isdir(from_path):
+        sub_source = os.listdir(from_path)
+        for item in sub_source:
+            new_source_path = os.path.join(from_path,item)
+            new_dest_path = os.path.join(dest_path,item)
+            if os.path.isdir(new_source_path):
+                os.mkdir(new_dest_path)
+            generate_page(new_source_path,template_path, new_dest_path)
