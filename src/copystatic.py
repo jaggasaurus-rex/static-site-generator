@@ -2,7 +2,7 @@ import shutil
 import os
 from block_handler import markdown_to_html_node
 
-def source_to_destination(source_path, dest_path):
+def source_to_destination():
     source_path = "static"
     dest_path = "docs"
     print("Deleting public directory...")
