@@ -2,9 +2,9 @@ import shutil
 import os
 from block_handler import markdown_to_html_node
 
-def source_to_destination():
-    source_path = "static"
-    dest_path = "public"
+def source_to_destination(source_path, dest_path):
+    #source_path = "static"
+    #dest_path = "public"
     print("Deleting public directory...")
     if os.path.exists(dest_path):
         shutil.rmtree(dest_path)
@@ -58,7 +58,7 @@ def generate_page(from_path, template_path, dest_path):
         f.write(updated_content)
 '''
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, base_path):
     if os.path.isfile(from_path):
         print(f"Generating page from {from_path} to {dest_path} using {template_path}")
         
@@ -71,15 +71,17 @@ def generate_page(from_path, template_path, dest_path):
         converted = markdown_to_html_node(article)
         content = converted.to_html()
         
-        updated_title = template.replace("{{ Title }}", title)
-        updated_content = updated_title.replace("{{ Content }}", content)
+        template = template.replace("{{ Title }}", title)
+        template = template.replace("{{ Content }}", content)
+        template = template.replace('href="/', f'href="{base_path}')
+        template = template.replace('src="/', f'src="{base_path}')
         
         file_dir = os.path.dirname(dest_path)
         os.makedirs(file_dir, exist_ok=True)
         name, ext = os.path.splitext(dest_path)
         name += ".html"
         with open(name, "w") as f:
-            f.write(updated_content)
+            f.write(template)
     elif os.path.isdir(from_path):
         sub_source = os.listdir(from_path)
         for item in sub_source:
@@ -87,4 +89,4 @@ def generate_page(from_path, template_path, dest_path):
             new_dest_path = os.path.join(dest_path,item)
             if os.path.isdir(new_source_path):
                 os.mkdir(new_dest_path)
-            generate_page(new_source_path,template_path, new_dest_path)
+            generate_page(new_source_path,template_path, new_dest_path, base_path)

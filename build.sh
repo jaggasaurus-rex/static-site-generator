@@ -1,0 +1,1 @@
+python3 src/main.py "https://github.com/jaggasaurus-rex/static-site-generator"
