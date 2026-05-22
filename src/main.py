@@ -16,7 +16,7 @@ def main():
         base_path = "/"
 
     print(base_path)
-    source_to_destination()
+    source_to_destination(dir_path_static, dir_path_public)
 
     generate_page(dir_path_content,template_path,dir_path_public, base_path)
 

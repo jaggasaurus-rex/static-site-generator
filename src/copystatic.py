@@ -2,9 +2,7 @@ import shutil
 import os
 from block_handler import markdown_to_html_node
 
-def source_to_destination():
-    source_path = "static"
-    dest_path = "docs"
+def source_to_destination(source_path, dest_path):
     print("Deleting public directory...")
     if os.path.exists(dest_path):
         shutil.rmtree(dest_path)
@@ -36,27 +34,6 @@ def extract_title(markdown):
     if title == "":
         raise Exception("No title line")
     return title
-'''
-def generate_page(from_path, template_path, dest_path):
-    print(f"Generating page from {from_path} to {dest_path} using {template_path}")
-    
-    with open(from_path) as f:
-        article = f.read()
-    title = extract_title(article)
-    with open(template_path) as f:
-        template = f.read()
-    
-    converted = markdown_to_html_node(article)
-    content = converted.to_html()
-    
-    updated_title = template.replace("{{ Title }}", title)
-    updated_content = updated_title.replace("{{ Content }}", content)
-    
-    file_dir = os.path.dirname(dest_path)
-    os.makedirs(file_dir, exist_ok=True)
-    with open(dest_path, "w") as f:
-        f.write(updated_content)
-'''
 
 def generate_page(from_path, template_path, dest_path, base_path):
     if os.path.isfile(from_path):
