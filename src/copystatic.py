@@ -3,8 +3,8 @@ import os
 from block_handler import markdown_to_html_node
 
 def source_to_destination(source_path, dest_path):
-    #source_path = "static"
-    #dest_path = "public"
+    source_path = "static"
+    dest_path = "docs"
     print("Deleting public directory...")
     if os.path.exists(dest_path):
         shutil.rmtree(dest_path)
